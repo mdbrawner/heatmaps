@@ -8,36 +8,67 @@
           width: 0.5px;
           height: 16px;
           float: right;
-          /* margin-right: 8px; */
-          opacity: 0.7;
         }
+        #panel {
+          position: absolute;
+          height: 75px;
+          z-index: 1000;
+          padding: 5px;
+          top: 10px;
+          right: 10px;
+          background-color: lightgray;
+          text-align: center;
+          opacity: 0.7;
+          color: blue;
+
+        }
+
+        #panel p {
+          font-size: 12px;
+          line-height: 16px;
+          margin: 0;
+          text-align: center;
+        }
+        #panel p2 {
+          font-size: 10px;
+          line-height: 12px;
+          margin: 0;
+          text-align: center;
+        }
+
     </style>
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script src="http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.4/chroma.min.js"></script>
 </head>
 <body>
-  <div id="map">
-</div>
+  <div id="map"></div>
+  <div id="panel">
+  <p>Legend</p>
+  <p2>Number of kestrels per route</p2>
+    <table>
+        <td>-</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td>+</td>
+    </table>
+  </div>
+
+
+
+
+
 
 
 <script>
 
-// 6. Set function for color ramp
-var colors = chroma.scale(['red','yellow','lime','blue']).colors(500); //colors = chroma.scale('OrRd').colors(5);
-// div.innerHTML += '<i style="background: ' + colors2[4] + '; opacity: 0.5"></i><p>19+</p>';
-for (var j = 0; j < colors.length; j++) {
-  $("#map").append("<i style='background: " + colors[j] + " ; opacity:0.5'></i>");
-}
-
-
-
     var map = L.map('map').setView([44.1, -120.5], 6);
     L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; \<a href="http://openstreetmap.org"\>OpenStreetMap\</a\> Contributors',
-        maxZoom: 18
+        maxZoom: 10,
+        minZoom: 3,
     }).addTo(map);
 
 
@@ -51,21 +82,33 @@ for (var j = 0; j < colors.length; j++) {
             kestrels_data[i] = [
                 data.features[i].geometry.coordinates[1],
                 data.features[i].geometry.coordinates[0],
-                data.features[i].properties.Kestrels]
+                data.features[i].properties.Redtail]
 
         }
 
 
 
         heat = L.heatLayer(kestrels_data,{
+            minOpacity: 0,
             radius: 35,
-            blur: 10,
+            blur: 7,
             maxZoom: 17,
-            gradient: {0.05: 'blue', 0.25: 'lime',  0.27: 'yellow', 0.3: 'red'},
+            max:1,
+            gradient: {0.07: 'blue', 0.172: 'lime',  0.272: 'yellow', 0.35: 'red'},
             // gradient: {0.05: 'white', 0.25: 'orange',  0.27: 'yellow', 0.3: 'red'}
         }).addTo(map);
       });
-color.addTo(map);
+
+
+      // 6. Set function for color ramp
+      var colors = chroma.scale(['red','yellow','lime','blue']).colors(240); //colors = chroma.scale('OrRd').colors(5);
+      // div.innerHTML += '<i style="background: ' + colors2[4] + '; opacity: 0.5"></i><p>19+</p>';
+      for (var j = 0; j < colors.length; j++) {
+        $("#panel").append("<i style='background: " + colors[j] + " ; opacity:0.7'></i>");
+      }
+
+
+
 
 
 </script>
