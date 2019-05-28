@@ -126,10 +126,10 @@ $.getJSON("assets/WRS_kestrels.geojson",function(data){
 ```
 
 ##### Creating a legend
-Now that we have a heatmap, we would like to create a legend to demarcate what the colors mean.  We will create a simple lengend here dynamically generating a color scheme to match our map.  First we need to set the css for the div `panel` that we created earlier.  Add the following code to the head in the css tags.
+Now that we have a heatmap, we would like to create a legend to demarcate what the colors mean.  We will create a simple lengend here dynamically generating a color scheme to match our map.  First we need to set the css for the div `panel` that we created earlier.  Add the following code to the head inside the `<style></stlye>` tags.
 
-###### Chart Total
 ```html
+<style>
 i {
   width: 0.5px;
   height: 16px;
@@ -161,72 +161,29 @@ i {
   margin: 0;
   text-align: center;
 }
+</style>
 ```
-###### Chart Districts
+Use the following code in the body to add content to the legend.  Here we are using standard cells sizes to space our legend color ramp indicators apart.  You can adjust based on the length of the color ramp.
 
-```javacript
-var chart2 = c3.generate({
-    title: {
-      text: 'Refugee Arrival by District (D)'
-    },
-    data: {
-        x: 't',
-        columns: [t, d1, d2, d3, d4, d5, d6,d7, d8, d9, d10, d11, d12],
-        type: 'spline',
-    },
-    axis: {
-        x: {
-            type: 'timeseries',
-            tick: {
-                format: '%Y-%m'
-            }
-        },
-        y: {
-          tick: {
-              format: ''
-          },
-          label: {
-              text: '# of Refugees',
-              position: 'outer-middle'
-          }
-        },
-    },
-    point: {
-      r: 0,
-      focus: {
-        expand: {
-          r: 2
-        }
-      }
-    },
-    zoom: {
-      enabled: {
-        type: "drag"
-      },
-      onzoomend: function(d) {
-        chart.zoom(chart2.zoom());
-      }
-    },
-    tooltip: {
-      linked: true
-    },
-      bindto: "#district"
-});
+```html
+<p>Legend</p>
+<p2>Number of kestrels per route</p2>
+  <table>
+      <td>-</td>
+      <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      <td></td><td></td><td></td><td></td><td></td>
+      <td>+</td>
+  </table>
 ```
-##### Add Geojson data onto map
-This code allows you to add geojson data to the leaflet map created earlier in the tutorial.
+##### Add the color ramp to the legend
 
-```javacript
-districts = L.geoJSON(datasets[1], {
-    onEachFeature: function(feature, layer) {
-      layer.bindPopup(feature.properties.NAME_EN)
-    },
-    style: {
-      opacity: 0.8,
-      fillOpacity: 0,
-      weight: 2,
-      color: "brown",
-      dashArray: '6',
-    }
-  }).addTo(mymap);
+Now we generate the color ramp matching the same color scheme of the map and append it to the `panel` div.  Add this to the script tag
+
+```javascript
+//Set function for color ramp
+var colors = chroma.scale(['red','yellow','lime','blue']).colors(240); //colors =
+
+for (var j = 0; j < colors.length; j++) {
+  $("#panel").append("<i style='background: " + colors[j] + " ; opacity:0.7'></i>");
+}
 ```
